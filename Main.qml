@@ -2,17 +2,17 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic
 
+import guitar
+
 Window {
     width: 1300
     height: 700
     maximumWidth: 1300
     maximumHeight: 700
-
     minimumWidth: 1300
     minimumHeight: 700
 
     visible: true
-
     color: "#C9F4FA"
 
     title: qsTr("Guitar Tuner")
@@ -81,6 +81,10 @@ Window {
         }
     }
 
+    Guitar {
+        id: guitar_head
+    }
+
     Rectangle {
 
         id: head
@@ -98,7 +102,7 @@ Window {
 
         Image {
             fillMode: Image.PreserveAspectFit
-            source: "images/guitar_default.png"
+            source: guitar_head.getPath()
             anchors.fill: parent
         }
     }
