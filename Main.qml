@@ -16,6 +16,11 @@ Window {
     color: "#C9F4FA"
 
     title: qsTr("Guitar Tuner")
+    id: window
+
+    function start() {
+        begin_animation.start();
+    }
 
     Column {
         id: main_column
@@ -29,6 +34,7 @@ Window {
 
         Text {
             id: header
+            objectName: "header"
 
             font.pixelSize: 60
             font.family: "Rockwell"
@@ -38,6 +44,8 @@ Window {
         }
 
         Text {
+            id: hint
+
             leftPadding: 140
             font.pointSize: 14
 
@@ -46,7 +54,7 @@ Window {
         }
 
         Button {
-            id: btn
+            id: beginButton
 
             anchors.left: parent.left
             anchors.leftMargin: 195
@@ -56,6 +64,10 @@ Window {
             width: 350
             height: 100
 
+            onClicked: {
+                start()
+                main_column.enabled = false
+            }
 
             background: Rectangle {
                 anchors.fill: parent
@@ -63,19 +75,115 @@ Window {
                 width: 350
                 height: 100
 
-                color: btn.down ? "#01a3a4" : "#c7ecee"
+                color: beginButton.down ? "#01a3a4" : "#c7ecee"
                 border.color: "#01a3a4"
                 radius: 20
 
                 Text {
                     anchors.centerIn: parent
 
-                    color: btn.down ? "#c7ecee":"#01a3a4"
+                    color: beginButton.down ? "#c7ecee":"#01a3a4"
                     font.family: "Verdana";
                     font.bold: true
                     font.pixelSize: 40
 
                     text: "TUNE"
+                }
+            }
+            Rectangle {
+                id: wave
+
+                width: beginButton.width
+                height: beginButton.height
+                radius: 20
+
+                color: "transparent"
+                border.color: "#01a3a4"
+                anchors.centerIn: parent
+            }
+        }
+        SequentialAnimation {
+            id: begin_animation
+
+            SequentialAnimation {
+                id: beginButton_animation
+                ParallelAnimation {
+                    PropertyAnimation {
+                        target: wave
+                        property: "border.width"
+                        from: 3
+                        to: 0
+                        duration: 300
+                    }
+                    PropertyAnimation {
+                        target: wave
+                        property: "width"
+                        to: beginButton.width + 45
+                        duration: 250
+                        easing.type: Easing.InOutQuad
+                    }
+                    PropertyAnimation {
+                        target: wave
+                        property: "height"
+                        to: beginButton.height + 40
+                        duration: 250
+                        easing.type: Easing.InOutQuad
+                    }
+                    PropertyAnimation {
+                        target: wave
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        duration: 300
+                    }
+                    PropertyAnimation {
+                        target: beginButton
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        easing.type: Easing.InQuint
+                        duration: 500
+                    }
+                    // костыль
+                    PropertyAnimation {
+                        target: beginButton
+                        property: "x"
+                        from: 0
+                        to: 1
+                        easing.type: Easing.InQuint
+                        duration: 1200
+                    }
+                }
+            }
+            ParallelAnimation {
+                id: beginText_animation
+                PropertyAnimation {
+                    target: header
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 400
+                }
+                PropertyAnimation {
+                    target: header
+                    property: "x"
+                    to: - 500
+                    easing.type: Easing.InOutCubic
+                    duration: 600
+                }
+                PropertyAnimation {
+                    target: hint
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 400
+                }
+                PropertyAnimation {
+                    target: hint
+                    property: "x"
+                    to: - 600
+                    easing.type: Easing.InOutCubic
+                    duration: 800
                 }
             }
         }
@@ -101,14 +209,14 @@ Window {
         anchors.verticalCenter: parent.verticalCenter
 
         Image {
+            id: fill
+
             fillMode: Image.PreserveAspectFit
             source: guitar_head.getPath()
             anchors.fill: parent
         }
     }
 
-
-    // Верхний ряд
     // Row {
     //     //anchors.fill: parent
     //     padding: 3

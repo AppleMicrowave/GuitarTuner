@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "guitar.h"
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
