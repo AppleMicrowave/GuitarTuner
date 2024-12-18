@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "guitar.h"
-#include <iostream>
+#include <audioclient.h>
 
 int main(int argc, char *argv[])
 {
