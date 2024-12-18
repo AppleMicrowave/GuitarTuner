@@ -4,7 +4,14 @@ project(Guitar_tuner VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(FFTW_PATH "C:/lib/fftw64")
+
+# подключение библиотеки fftw
+include_directories(${FFTW_PATH})
+set(FFTW_LIB "${FFTW_PATH}/libfftw3-3.lib")
+
 find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -19,6 +26,7 @@ qt_add_qml_module(appGuitar_tuner
         Main.qml
         RESOURCES images/guitar_default.png
         SOURCES guitar.h guitar.cpp
+        SOURCES audiomanager.h audiomanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -34,6 +42,8 @@ set_target_properties(appGuitar_tuner PROPERTIES
 
 target_link_libraries(appGuitar_tuner
     PRIVATE Qt6::Quick
+    PRIVATE ${FFTW_LIB}
+    PRIVATE Qt6::Multimedia
 )
 
 include(GNUInstallDirs)

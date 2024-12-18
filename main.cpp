@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "guitar.h"
-#include <audioclient.h>
+#include "audiomanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
 
     qmlRegisterType<Guitar>("guitar", 1, 0, "Guitar");
+    qmlRegisterType<AudioManager>("Audi", 1, 0, "AudioManager");
     engine.loadFromModule("Guitar_tuner", "Main");
 
     return app.exec();

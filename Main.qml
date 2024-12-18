@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Basic
 
 import guitar
+import Audi
 
 Window {
     width: 1300
@@ -114,6 +115,10 @@ Window {
         id: guitar_head
     }
 
+    AudioManager {
+        id: audioManager
+    }
+
     Rectangle {
         id: left_synchroline
         width: 0
@@ -140,8 +145,6 @@ Window {
         height: 500
 
         x: 100
-
-        y: (window.height / 2) - (height / 2)
 
         opacity: 0
         color: "transparent"
@@ -191,12 +194,13 @@ Window {
         color: "grey"
 
         x: 345
-        y: (window.height / 2) - (height / 2)
+        y: audioManager.getCurrentFrequency()
 
         border.color: "black"
         border.width: 2
 
         transformOrigin: Item.Center
+
 
         scale: 0
 
@@ -213,11 +217,11 @@ Window {
             anchors.centerIn: parent
         }
 
-        SequentialAnimation on y {
-            loops: Animation.Infinite
-            NumberAnimation { to: 500; duration: 2000; easing.type: Easing.InOutQuad }
-            NumberAnimation { to: 200; duration: 2000; easing.type: Easing.InOutQuad }
-        }
+        // SequentialAnimation on y {
+        //     loops: Animation.Infinite
+        //     NumberAnimation { to: 500; duration: 2000; easing.type: Easing.InOutQuad }
+        //     NumberAnimation { to: 200; duration: 2000; easing.type: Easing.InOutQuad }
+        // }
     }
 
     SequentialAnimation {
@@ -392,6 +396,9 @@ Window {
                     duration: 1000
                 }
             }
+        }
+        onFinished: {
+            audioManager.captureAudio()
         }
     }
     PropertyAnimation {
