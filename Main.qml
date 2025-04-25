@@ -1,10 +1,7 @@
-import QtQuick
+import QtQuick 2.15
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Basic
-
-import guitar
-import Audi
 
 Window {
     width: 1300
@@ -111,14 +108,6 @@ Window {
 
     }
 
-    Guitar {
-        id: guitar_head
-    }
-
-    AudioManager {
-        id: audioManager
-    }
-
     Rectangle {
         id: left_synchroline
         width: 0
@@ -145,6 +134,7 @@ Window {
         height: 500
 
         x: 100
+        anchors.verticalCenter: parent.verticalCenter
 
         opacity: 0
         color: "transparent"
@@ -194,7 +184,7 @@ Window {
         color: "grey"
 
         x: 345
-        y: audioManager.getCurrentFrequency()
+        y: parent.height / 2
 
         border.color: "black"
         border.width: 2
@@ -217,11 +207,11 @@ Window {
             anchors.centerIn: parent
         }
 
-        // SequentialAnimation on y {
-        //     loops: Animation.Infinite
-        //     NumberAnimation { to: 500; duration: 2000; easing.type: Easing.InOutQuad }
-        //     NumberAnimation { to: 200; duration: 2000; easing.type: Easing.InOutQuad }
-        // }
+        SequentialAnimation on y {
+            loops: Animation.Infinite
+            NumberAnimation { to: 500; duration: 2000; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: 200; duration: 2000; easing.type: Easing.InOutQuad }
+        }
     }
 
     SequentialAnimation {
@@ -397,9 +387,9 @@ Window {
                 }
             }
         }
-        onFinished: {
-            audioManager.captureAudio()
-        }
+        // onFinished: {
+        //     audioManager.captureAudio()
+        // }
     }
     PropertyAnimation {
         id: grid_animation
@@ -433,7 +423,7 @@ Window {
             id: fill
 
             fillMode: Image.PreserveAspectFit
-            source: guitar_head.getPath()
+            source: guitar.getPath()
             anchors.fill: parent
         }
     }

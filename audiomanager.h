@@ -31,9 +31,10 @@ private:
     WAVEFORMATEX* pWaveFormat;            // Format of the audio stream
 
     // Internal variables
-    QVector<float> audioBuffer;
-    QThread* audioCaptureThread;        // Buffer to store raw audio data
+    QVector<float> audioBuffer;        // Buffer to store raw audio data
     double currentFrequency;              // Current detected frequency in Hz
+    bool isRunning;
+    QThread* audioCaptureThread;
 
     // Initialization methods
     void initializeAudioDevice();         // Initialize the audio capture device

@@ -1,6 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
+#include <QQmlContext>
 #include "guitar.h"
 #include "audiomanager.h"
 
@@ -16,9 +16,13 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
-    qmlRegisterType<Guitar>("guitar", 1, 0, "Guitar");
-    qmlRegisterType<AudioManager>("Audi", 1, 0, "AudioManager");
     engine.loadFromModule("Guitar_tuner", "Main");
+
+    Guitar guitar;
+    engine.rootContext()->setContextProperty("guitar", &guitar);
+    //qmlRegisterType<Guitar>("guitar", 1, 0, "Guitar");
+   // qmlRegisterType<AudioManager>("Audi", 1, 0, "AudioManager");
+
 
     return app.exec();
 }

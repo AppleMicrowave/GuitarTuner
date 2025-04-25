@@ -2,7 +2,7 @@
 #include <fftw3.h> // Include FFTW for frequency analysis
 
 AudioManager::AudioManager(QObject *parent)
-    : QObject(parent), pEnumerator(nullptr), pDevice(nullptr), pAudioClient(nullptr), pWaveFormat(nullptr), currentFrequency(0.0) {
+    : QObject(parent), pEnumerator(nullptr), pDevice(nullptr), pAudioClient(nullptr), pWaveFormat(nullptr), currentFrequency(0.0), isRunning(true) {
     initializeAudioDevice();
 
     audioCaptureThread = new QThread(this);
@@ -15,11 +15,12 @@ AudioManager::AudioManager(QObject *parent)
 }
 
 AudioManager::~AudioManager() {
+
+    qDebug() << "Stopping audio capture thread...";
+    isRunning = false;
     releaseResources();
-    if (audioCaptureThread && audioCaptureThread->isRunning()) {
-        qDebug() << "Stopping audio capture thread...";
-        audioCaptureThread->quit();  // Просим поток завершиться
-        audioCaptureThread->wait();  // Ждем завершения потока
+    if (!isRunning && audioCaptureThread->isRunning()) {
+        audioCaptureThread->wait();
     }
 }
 
@@ -92,6 +93,11 @@ void AudioManager::releaseResources() {
 }
 
 void AudioManager::captureAudio() {
+    if (isRunning == false) {
+        audioCaptureThread->requestInterruption();
+        return;
+    }
+
     HRESULT hr;
     IAudioCaptureClient* pCaptureClient = nullptr;
 
@@ -113,7 +119,7 @@ void AudioManager::captureAudio() {
     BYTE* pData;
     DWORD flags;
 
-    while (true) {
+    while (isRunning) {
         hr = pCaptureClient->GetNextPacketSize(&packetLength);
         if (FAILED(hr)) {
             qDebug() << "Failed to get packet size.";
@@ -149,6 +155,8 @@ void AudioManager::captureAudio() {
 
     pCaptureClient->Release();
     pAudioClient->Stop();
+
+
 }
 
 void AudioManager::processAudioData() {
@@ -193,4 +201,5 @@ void AudioManager::processAudioData() {
 
     // Clear the buffer for the next batch
     audioBuffer.clear();
+    audioCaptureThread->msleep(50);
 }
